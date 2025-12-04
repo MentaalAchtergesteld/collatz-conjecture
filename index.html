@@ -7,14 +7,56 @@
 	<title>Collatz Conjecture</title>
 </head>
 <body>
-
 	<style>
-		body {
+		* {
 			margin: 0;
 			padding: 0;
-			overflow: hidden;
+			box-sizing: border-box;
+		}
+		body {
+			min-width: 100vw;
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+
+			margin: 0;
+			padding: 0;
+			overflow-y: hidden;
+		}
+
+		#controls {
+			position: absolute;
+			top: 0;
+			left: 50;
+
+			margin: 8px;
+			padding: 8px;
+
+			background: hsl(0, 0%, 90%);
+			box-shadow: 0 0px 4px 4px rgba(0, 0, 0, 0.4);
+			border-radius: 8px;
+
+			min-width: 96px;
+
+			display: flex;
+			flex-direction: row;
+			gap: 16px;
+
+			align-items: center;
 		}
 	</style>
 	<canvas id="canvas"></canvas>	
+	<div id="controls">
+		<label>Repulsion Force:</label>		
+		<input type="range" id="repulsionForce" min="1" max="512" step="1" value="96" />
+		<label>Repulsion Radius:</label>		
+		<input type="range" id="repulsionRadius" min="32" max="256" step="1" value="96" />
+		<label>Spring Force:</label>		
+		<input type="range" id="springForce" min="0" max="16" step="0.5" value="0.5" />
+		<label>Spring Length:</label>		
+		<input type="range" id="springLength" min="1" max="128" step="1" value="32" />
+	</div>
 </body>
 </html>

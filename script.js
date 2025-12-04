@@ -8,17 +8,43 @@ COLORS.BACKGROUND = "hsl(0, 0%, 15%)";
 COLORS.NODE_CONNECTION = "hsl(45, 90%, 90%)";
 COLORS.NODE_TEXT = "hsl(0, 0%, 15%)";
 
-const NODE_RADIUS = 16;
-const REPULSION_RADIUS = 256;
-const REPULSION_FORCE = 8.0;
+let NODE_RADIUS = 16;
+let REPULSION_RADIUS = 96;
+let REPULSION_FORCE = 100.0;
 
-const SPRING_LENGTH = 60;
-const SPRING_FORCE = 0.5;
-const CENTER_GRAVITY = 0.1;
-const MAX_VEL = 100;
+let SPRING_LENGTH = 32;
+let SPRING_FORCE = 0.5;
+let CENTER_GRAVITY = 0.1;
+let MAX_VEL = 100;
 
 let CENTER_X = canvas.width / 2;
 let CENTER_Y = canvas.height / 2;
+
+const repulsionForceRange = document.getElementById("repulsionForce");
+const repulsionRadiusRange = document.getElementById("repulsionRadius");
+const springForceRange = document.getElementById("springForce");
+const springLengthRange = document.getElementById("springLength");
+
+repulsionForceRange.addEventListener("input", _ => {
+	REPULSION_FORCE = parseInt(repulsionForceRange.value);
+});
+
+repulsionRadiusRange.addEventListener("input", _ => {
+	REPULSION_RADIUS = parseInt(repulsionRadiusRange.value);
+});
+
+springForceRange.addEventListener("input", _ => {
+	SPRING_FORCE = parseInt(springForceRange.value);
+});
+
+springLengthRange.addEventListener("input", _ => {
+	SPRING_LENGTH = parseInt(springLengthRange.value);
+});
+
+repulsionForceRange.value = REPULSION_FORCE;
+repulsionRadiusRange.value = REPULSION_RADIUS;
+springLengthRange.value = SPRING_LENGTH;
+springForceRange.value = SPRING_FORCE;
 
 let nodes = [];
 
@@ -313,7 +339,6 @@ let selectedNode;
 
 canvas.addEventListener("mousedown", e => {
 	selectedNode = nodes.find(n => distance(n.x, n.y, e.clientX, e.clientY) < n.radius);
-	console.log(selectedNode);
 })
 
 canvas.addEventListener("mouseup", e => {
