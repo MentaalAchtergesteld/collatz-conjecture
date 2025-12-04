@@ -5,8 +5,6 @@ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 const COLORS = {};
 COLORS.BACKGROUND = "hsl(0, 0%, 15%)";
-COLORS.NODE_FILL = "hsl(45, 90%, 60%)";
-COLORS.NODE_STROKE = "hsl(40, 80%, 60%)";
 COLORS.NODE_CONNECTION = "hsl(45, 90%, 90%)";
 COLORS.NODE_TEXT = "hsl(0, 0%, 15%)";
 
@@ -15,7 +13,7 @@ const REPULSION_RADIUS = 256;
 const REPULSION_FORCE = 8.0;
 
 const SPRING_LENGTH = 60;
-const SPRING_FORCE = 0.05;
+const SPRING_FORCE = 0.5;
 const CENTER_GRAVITY = 0.1;
 const MAX_VEL = 100;
 
@@ -302,10 +300,29 @@ class Collatz {
 	}
 }
 
+let MOUSE_X = 0;
+let MOUSE_Y = 0;
+canvas.addEventListener("mousemove", e => {
+	MOUSE_X = e.clientX;
+	MOUSE_Y = e.clientY;
+});
+
 let collatz = [];
 
-canvas.addEventListener("click", e => {
-	collatz.push(new Collatz(Math.floor(Math.random()*100000), e.clientX, e.clientY));
+let selectedNode;
+
+canvas.addEventListener("mousedown", e => {
+	selectedNode = nodes.find(n => distance(n.x, n.y, e.clientX, e.clientY) < n.radius);
+	console.log(selectedNode);
+})
+
+canvas.addEventListener("mouseup", e => {
+	if (!selectedNode) {
+		collatz.push(new Collatz(Math.floor(Math.random()*100000), e.clientX, e.clientY));
+		return;
+	} else {
+		selectedNode = undefined;
+	}
 })
 
 let lastTime = performance.now();
@@ -320,6 +337,11 @@ function loop(time) {
 	nodes.forEach(n => n.update(delta, nodes));
 	nodes.forEach(n => n.drawConnections(ctx));
 	nodes.forEach(n => n.draw(ctx));
+
+	if (selectedNode) {
+		selectedNode.x = MOUSE_X;
+		selectedNode.y = MOUSE_Y;
+	}
 
 	requestAnimationFrame(loop);
 }
