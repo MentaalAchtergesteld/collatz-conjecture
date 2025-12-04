@@ -17,34 +17,18 @@ let SPRING_FORCE = 0.5;
 let CENTER_GRAVITY = 0.1;
 let MAX_VEL = 100;
 
+
+const hud = new QuickHUD("top-right");
+
+hud
+	.addRange("Repulsion Radius", 0, 256, REPULSION_RADIUS, 1, (val) => REPULSION_RADIUS = val)
+	.addRange("Repulsion Force",  0, 512, REPULSION_FORCE,  1, (val) => REPULSION_FORCE = val)
+	.addRange("Spring Length",    0, 128, SPRING_LENGTH,    1, (val) => SPRING_LENGTH = val)
+	.addRange("Spring Force",     0, 16,  SPRING_FORCE,   0.1, (val) => SPRING_FORCE = val)
+	.addRange("Center Gravity",   0, 8,   CENTER_GRAVITY, 0.1, (val) => CENTER_GRAVITY = val)
+
 let CENTER_X = canvas.width / 2;
 let CENTER_Y = canvas.height / 2;
-
-const repulsionForceRange = document.getElementById("repulsionForce");
-const repulsionRadiusRange = document.getElementById("repulsionRadius");
-const springForceRange = document.getElementById("springForce");
-const springLengthRange = document.getElementById("springLength");
-
-repulsionForceRange.addEventListener("input", _ => {
-	REPULSION_FORCE = parseInt(repulsionForceRange.value);
-});
-
-repulsionRadiusRange.addEventListener("input", _ => {
-	REPULSION_RADIUS = parseInt(repulsionRadiusRange.value);
-});
-
-springForceRange.addEventListener("input", _ => {
-	SPRING_FORCE = parseInt(springForceRange.value);
-});
-
-springLengthRange.addEventListener("input", _ => {
-	SPRING_LENGTH = parseInt(springLengthRange.value);
-});
-
-repulsionForceRange.value = REPULSION_FORCE;
-repulsionRadiusRange.value = REPULSION_RADIUS;
-springLengthRange.value = SPRING_LENGTH;
-springForceRange.value = SPRING_FORCE;
 
 let nodes = [];
 
