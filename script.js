@@ -17,8 +17,14 @@ let SPRING_FORCE = 0.5;
 let CENTER_GRAVITY = 0.1;
 let MAX_VEL = 100;
 
+let SHOW_CONNECTIONS = true;
 
-const hud = new QuickHUD("top-right");
+let selectedNode;
+
+let nodes = [];
+let collatz = [];
+
+const hud = new QuickHUD("Configuration", "top-right").setDraggable(true);
 
 hud
 	.addRange("Repulsion Radius", 0, 256, REPULSION_RADIUS, 1, (val) => REPULSION_RADIUS = val)
@@ -26,11 +32,11 @@ hud
 	.addRange("Spring Length",    0, 128, SPRING_LENGTH,    1, (val) => SPRING_LENGTH = val)
 	.addRange("Spring Force",     0, 16,  SPRING_FORCE,   0.1, (val) => SPRING_FORCE = val)
 	.addRange("Center Gravity",   0, 8,   CENTER_GRAVITY, 0.1, (val) => CENTER_GRAVITY = val)
+	.addButton("Reset", () => { nodes = []; collatz = []; selectedNode = undefined; });
 
 let CENTER_X = canvas.width / 2;
 let CENTER_Y = canvas.height / 2;
 
-let nodes = [];
 
 function lerp(start, end, t) {
 	return start + (end - start) * t;
@@ -317,10 +323,6 @@ canvas.addEventListener("mousemove", e => {
 	MOUSE_Y = e.clientY;
 });
 
-let collatz = [];
-
-let selectedNode;
-
 canvas.addEventListener("mousedown", e => {
 	selectedNode = nodes.find(n => distance(n.x, n.y, e.clientX, e.clientY) < n.radius);
 })
@@ -337,6 +339,7 @@ canvas.addEventListener("mouseup", e => {
 let lastTime = performance.now();
 function loop(time) {
 	let delta = Math.max((time - lastTime) / 1000, 0);
+	if (delta > 1) delta = 0;
 	lastTime = time;
 
 	clearCanvas();
@@ -344,7 +347,7 @@ function loop(time) {
 	collatz.forEach(c => c.update(delta));
 	collatz = collatz.filter(c => !c.isFinished);
 	nodes.forEach(n => n.update(delta, nodes));
-	nodes.forEach(n => n.drawConnections(ctx));
+	if (SHOW_CONNECTIONS) nodes.forEach(n => n.drawConnections(ctx));
 	nodes.forEach(n => n.draw(ctx));
 
 	if (selectedNode) {
