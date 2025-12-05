@@ -239,10 +239,15 @@ class QuickHUD {
 	}
 
 	addRange(label, min, max, value, step, callback, parent = this.content) {
+		const valLabel = createElement("span")
+			.withText(value)
+			.withId(`val-${label}`)
+		  .ok();
+
 		const labelRow = createElement("div")
 			.withClass("qh-label-row")
 			.appendChild(createElement("span").withText(label).ok())
-			.appendChild(createElement("span").withText(value).withId(`val-${label}`).ok())
+			.appendChild(valLabel)
 			.ok();
 
 		const input = createElement("input")
@@ -254,11 +259,11 @@ class QuickHUD {
 			.withAttribute("value", value)
 			.ok();
 
-		const row = this.createRow(parent, [labelRow, input]);
+		this.createRow(parent, [labelRow, input]);
 
 		input.addEventListener("input", e => {
 			const val = parseFloat(e.target.value);
-			row.querySelector(`#val-${label}`).innerText = val.toFixed(step < 1 ? 2 : 0);
+			valLabel.innerText = val.toFixed(step < 1 ? 2 : 0);
 			callback(val);
 		});
 
